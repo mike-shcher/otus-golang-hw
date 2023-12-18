@@ -32,7 +32,6 @@ linters:
     - exportloopref
     - funlen
     - gci
-    - gocognit
     - goconst
     - gocritic
     - gocyclo
