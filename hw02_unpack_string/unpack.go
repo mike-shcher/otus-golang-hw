@@ -10,21 +10,22 @@ import (
 var ErrInvalidString = errors.New("invalid string")
 
 func Unpack(testString string) (string, error) {
-	re := regexp.MustCompile(`[^a-z0-9]+`)
+	re := regexp.MustCompile(`[~\x60@#$%^&*()\-_+={}\[\]\\|:;"'<>,./?]+`)
 	if len(re.FindStringIndex(testString)) > 0 {
 		return "", ErrInvalidString
 	}
 	var resultString strings.Builder
 	bufferedChar := "initial value"
+	runes := []rune(testString)
 
-	for i, char := range testString {
+	for i, char := range runes {
 		isDigit := false
 
 		numberOfRepetitions, err := strconv.Atoi(string(char))
 		if err != nil {
 			if bufferedChar == "initial value" ||
 				bufferedChar == "" &&
-					i != len(testString)-1 {
+					i != len(runes)-1 {
 				bufferedChar = string(char)
 
 				continue
@@ -49,7 +50,7 @@ func Unpack(testString string) (string, error) {
 			bufferedChar = string(char)
 		}
 
-		if i == len(testString)-1 && !isDigit {
+		if i == len(runes)-1 && !isDigit {
 			resultString.WriteString(string(char))
 		}
 	}
